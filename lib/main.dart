@@ -27,12 +27,12 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<String> _players = ["Dave", "Cath", "Miles", "Ross"];
-  List<int> _scores = [1, 2, 7, 8, 9, 10, 11, 12];
+  List<int> _scores = [];
   final _inputController = TextEditingController();
 
   void _addScore() {
     setState(() {
-      var value = int.tryParse(_inputController.text) || 0;
+      final value = int.tryParse(_inputController.text) ?? 0;
       _scores.add(value);
       _inputController.clear();
     });
@@ -53,16 +53,21 @@ class _MyHomePageState extends State<MyHomePage> {
             crossAxisCount: _players.length),
         itemBuilder: (BuildContext context, int index) {
           if (index < _players.length) {
-            return Text("P: ${_players[index]} (${index})");
+            var total = 0;
+            for (var i = index; i < _scores.length; i += _players.length) {
+              total += _scores[i];
+            }
+            return Text("${_players[index]}\n$total", textAlign: TextAlign.center);
           } else {
             var scoreIdx = index - _players.length;
             if (scoreIdx < _scores.length) {
-              return Text("S: ${_scores[scoreIdx]} (${scoreIdx})");
+              return Text("${_scores[scoreIdx]}", textAlign: TextAlign.center);
             } else if (scoreIdx == _scores.length) {
               return TextField(
                 autofocus: true,
                 keyboardType: TextInputType.number,
                 controller: _inputController,
+                textAlign: TextAlign.center,
                 decoration: InputDecoration(
                     border: InputBorder.none, hintText: 'Score'),
               );
