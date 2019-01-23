@@ -44,7 +44,10 @@ class _MyHomePageState extends State<MyHomePage> {
           child: GridView.builder(
         primary: false,
         padding: const EdgeInsets.all(20.0),
-        itemCount: (_scores.length * (2 + _scores.fold(0, (m, s) => s.item2.length > m ? s.item2.length : m))),
+        itemCount: (_scores.length *
+            (2 +
+                _scores.fold(
+                    0, (m, s) => s.item2.length > m ? s.item2.length : m))),
         gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: _scores.length, childAspectRatio: 2),
         itemBuilder: (BuildContext context, int index) {
@@ -58,29 +61,28 @@ class _MyHomePageState extends State<MyHomePage> {
             );
           } else if (index < (_scores.length * 2)) {
             final ctrl = TextEditingController();
-            return Row(children: [
-              Expanded(
-                  child: TextField(
-                autofocus: true,
-                keyboardType: TextInputType.number,
-                controller: ctrl,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                    border: InputBorder.none, hintText: 'Score'),
-              )),
-              Expanded(
-                  child: FloatingActionButton(
-                child: Icon(Icons.add),
-                tooltip: 'Add Score',
-                onPressed: () {
-                  setState(() {
-                    final value = int.tryParse(ctrl.text) ?? 0;
+            var _focusNode = new FocusNode();
+            _focusNode.addListener(() {
+              if (!_focusNode.hasFocus) {
+                setState(() {
+                  if (ctrl.text != "") {
+                    final value = int.parse(ctrl.text);
                     player.item2.insert(0, value);
-                    ctrl.clear();
-                  });
-                },
-              ))
-            ]);
+                  }
+                  ctrl.clear();
+                });
+              }
+            });
+            return TextFormField(
+              autofocus: false,
+              keyboardType: TextInputType.number,
+              controller: ctrl,
+              textAlign: TextAlign.center,
+              textInputAction: TextInputAction.next,
+              focusNode: _focusNode,
+              decoration:
+                  InputDecoration(border: InputBorder.none, hintText: 'Score'),
+            );
           } else {
             var scoreIdx = (index / _scores.length).floor() - 2;
             if (scoreIdx < player.item2.length) {
