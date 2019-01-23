@@ -48,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: GridView.builder(
         primary: false,
         padding: const EdgeInsets.all(20.0),
-        itemCount: _players.length + _scores.length + 4,
+        itemCount: (_players.length * 2) + _scores.length,
         gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: _players.length, childAspectRatio: 2),
         itemBuilder: (BuildContext context, int index) {
@@ -62,29 +62,34 @@ class _MyHomePageState extends State<MyHomePage> {
               textAlign: TextAlign.center,
               style: TextStyle(fontWeight: FontWeight.bold),
             );
+          } else if (index < (_players.length * 2)) {
+            final ctrl = TextEditingController();
+            return Row(children: [
+              Expanded(
+                  child: TextField(
+                autofocus: true,
+                keyboardType: TextInputType.number,
+                controller: ctrl,
+                textAlign: TextAlign.center,
+                decoration: InputDecoration(
+                    border: InputBorder.none, hintText: 'Score'),
+              )),
+              Expanded(
+                  child: FloatingActionButton(
+                child: Icon(Icons.add),
+                tooltip: 'Add Score',
+                onPressed: () {
+                  setState(() {
+                    final value = int.tryParse(ctrl.text) ?? 0;
+                    _scores.add(value);
+                    _inputController.clear();
+                  });
+                },
+              ))
+            ]);
           } else {
-            var scoreIdx = index - _players.length;
-            if (scoreIdx < _scores.length) {
-              return Text("${_scores[scoreIdx]}", textAlign: TextAlign.center);
-            } else {
-              return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TextField(
-                      autofocus: true,
-                      keyboardType: TextInputType.number,
-                      controller: _inputController,
-                      textAlign: TextAlign.center,
-                      decoration: InputDecoration(
-                          border: InputBorder.none, hintText: 'Score'),
-                    ),
-                    FloatingActionButton(
-                      child: Icon(Icons.add),
-                      tooltip: 'Add Score',
-                      onPressed: _addScore,
-                    )
-                  ]);
-            }
+            var scoreIdx = index - (_players.length * 2);
+            return Text("${_scores[scoreIdx]}", textAlign: TextAlign.center);
           }
         },
       )),
