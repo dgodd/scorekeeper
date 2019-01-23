@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tuple/tuple.dart';
 
 void main() => runApp(MyApp());
 
@@ -26,17 +27,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<String> _players = ["Dave", "Cath", "Miles", "Ross"];
-  List<int> _scores = [];
-  final _inputController = TextEditingController();
-
-  void _addScore() {
-    setState(() {
-      final value = int.tryParse(_inputController.text) ?? 0;
-      _scores.add(value);
-      _inputController.clear();
-    });
-  }
+  List<Tuple2<String, List<int>>> _scores = [
+    Tuple2<String, List<int>>("Dave", [1, 2, 3]),
+    Tuple2<String, List<int>>("Cath", [3, 4, 5]),
+    Tuple2<String, List<int>>("Miles", [22, 33]),
+    Tuple2<String, List<int>>("Ross", [])
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -48,21 +44,19 @@ class _MyHomePageState extends State<MyHomePage> {
           child: GridView.builder(
         primary: false,
         padding: const EdgeInsets.all(20.0),
-        itemCount: (_players.length * 2) + _scores.length,
+        itemCount: (_scores.length * (2 + _scores.fold(0, (m, s) => s.item2.length > m ? s.item2.length : m))),
         gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: _players.length, childAspectRatio: 2),
+            crossAxisCount: _scores.length, childAspectRatio: 2),
         itemBuilder: (BuildContext context, int index) {
-          if (index < _players.length) {
-            var total = 0;
-            for (var i = index; i < _scores.length; i += _players.length) {
-              total += _scores[i];
-            }
+          final player = _scores[index % _scores.length];
+          if (index < _scores.length) {
+            var total = player.item2.fold(0, (t, v) => t + v);
             return Text(
-              "${_players[index]}\n$total",
+              "${player.item1}\n$total",
               textAlign: TextAlign.center,
               style: TextStyle(fontWeight: FontWeight.bold),
             );
-          } else if (index < (_players.length * 2)) {
+          } else if (index < (_scores.length * 2)) {
             final ctrl = TextEditingController();
             return Row(children: [
               Expanded(
@@ -81,15 +75,20 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   setState(() {
                     final value = int.tryParse(ctrl.text) ?? 0;
-                    _scores.add(value);
-                    _inputController.clear();
+                    player.item2.insert(0, value);
+                    ctrl.clear();
                   });
                 },
               ))
             ]);
           } else {
-            var scoreIdx = index - (_players.length * 2);
-            return Text("${_scores[scoreIdx]}", textAlign: TextAlign.center);
+            var scoreIdx = (index / _scores.length).floor() - 2;
+            if (scoreIdx < player.item2.length) {
+              return Text("${player.item2[scoreIdx]}",
+                  textAlign: TextAlign.center);
+            } else {
+              return Text("N/A", textAlign: TextAlign.center);
+            }
           }
         },
       )),
