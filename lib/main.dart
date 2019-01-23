@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 import 'dart:math';
+import 'package:math_expressions/math_expressions.dart';
 
 void main() => runApp(MyApp());
 
@@ -78,7 +79,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   setState(() {
                     if (value != "") {
                       final player = _scores[_focusedPlayerIdx];
-                      player.item2.insert(0, int.parse(value));
+
+                      Parser p = new Parser();
+                      Expression exp = p.parse(value);
+
+                      player.item2.insert(0, exp.evaluate(EvaluationType.REAL, new ContextModel()).floor());
                     }
                     _ctrl.clear();
                     _focusedPlayerIdx = (_focusedPlayerIdx + 1) % _scores.length;
