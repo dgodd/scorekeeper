@@ -57,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
           if (index < _scores.length) {
             var total = player.item2.fold(0, (t, v) => t + v);
             return Text(
-              "${player.item1} (${player.item2.length})\n$total",
+              "${player.item1}\n$total",
               textAlign: TextAlign.center,
               style: TextStyle(fontWeight: FontWeight.bold),
             );
@@ -100,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
           } else {
             var scoreIdx = (index / _scores.length).floor() - 2;
             if (scoreIdx < player.item2.length) {
-              return Text("${player.item2[scoreIdx]}",
+              return Text("${player.item2[scoreIdx]} (${player.item2.length - scoreIdx})",
                   textAlign: TextAlign.center);
             } else {
               return Text("", textAlign: TextAlign.center);
