@@ -69,6 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     final value = int.parse(ctrl.text);
                     player.item2.insert(0, value);
                   }
+                  _focusNode.unfocus();
                   ctrl.clear();
                 });
               }
