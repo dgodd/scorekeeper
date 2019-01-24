@@ -78,7 +78,7 @@ class _ScoresPageState extends State<ScoresPage> {
                       _focusedPlayerIdx = playerIdx;
                     });
                   },
-                  child: Text("S", textAlign: TextAlign.center),
+                  child: Text("-", textAlign: TextAlign.center, style: TextStyle(color: Colors.grey)),
                 );
               }
             } else {
