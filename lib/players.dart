@@ -21,15 +21,15 @@ class _PlayersPageState extends State<PlayersPage> {
           title: Text(widget.title),
         ),
         floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.navigate_next), onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    ScoresPage(title: 'Score Keeper', players: _players)),
-          );
-          }
-        ),
+            child: const Icon(Icons.navigate_next),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ScoresPage(title: 'Score Keeper', players: _players)),
+              );
+            }),
         body: Column(children: [
           Row(children: [
             Expanded(
@@ -58,17 +58,31 @@ class _PlayersPageState extends State<PlayersPage> {
             ),
           ]),
           Expanded(
-              child: ListView.builder(
-                  itemCount: _players.length,
-                  itemBuilder: (BuildContext ctxt, int index) {
-                    return     ListTile(
-                      leading: Icon(Icons.person),
-                      title: Text(_players[index]),
-                      trailing: GestureDetector(child: Icon(Icons.remove_circle), onTap: () { setState(() {
-                        _players.removeAt(index);
-                      }); }),
-                    );
-                  })),
+              child: ReorderableListView(
+                  onReorder: (int oldIndex, int newIndex) {
+                    if (oldIndex < newIndex) {
+                      // removing the item at oldIndex will shorten the list by 1.
+                      newIndex -= 1;
+                    }
+                    setState(() {
+                      final String name = _players.removeAt(oldIndex);
+                      _players.insert(newIndex, name);
+                    });
+                  },
+                  children: Iterable<int>.generate(_players.length, (i) => i)
+                      .map((index) => ListTile(
+                            key: Key("player_$index"),
+                            leading: Icon(Icons.person),
+                            title: Text(_players[index]),
+                            trailing: GestureDetector(
+                                child: Icon(Icons.remove_circle),
+                                onTap: () {
+                                  setState(() {
+                                    _players.removeAt(index);
+                                  });
+                                }),
+                          ))
+                      .toList())),
         ]));
   }
 }
