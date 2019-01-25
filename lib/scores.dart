@@ -60,17 +60,42 @@ class _ScoresPageState extends State<ScoresPage> {
               var total = player.item2.fold(0, (t, v) => t + v);
               return GestureDetector(
                   onTap: () => setState(() => _focusedPlayerIdx = playerIdx),
-                  child:Container(color: playerIdx == _focusedPlayerIdx ? Colors.lightGreenAccent : null, child: Text(
-                "${player.item1}\n$total",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              )));
+                  child: Container(
+                      color: playerIdx == _focusedPlayerIdx
+                          ? Colors.lightGreenAccent
+                          : null,
+                      child: Text(
+                        "${player.item1}\n$total",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      )));
             } else {
               var scoreIdx = (index / _scores.length).floor() - 1;
               if (scoreIdx < player.item2.length) {
-                return Text(
-                    "${player.item2[scoreIdx]} (${player.item2.length - scoreIdx})",
-                    textAlign: TextAlign.center);
+                final text =
+                    "${player.item2[scoreIdx]} (${player.item2.length - scoreIdx})";
+                return GestureDetector(
+                    onLongPress: () => showDialog(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                                title: Text(
+                                    "Delete ${text} from ${player.item1}?"),
+                                actions: <Widget>[
+                                  FlatButton(
+                                      child: const Text('DISAGREE'),
+                                      onPressed: () {
+                                        Navigator.pop(context, null);
+                                      }),
+                                  FlatButton(
+                                      child: const Text('AGREE'),
+                                      onPressed: () {
+                                        setState(() {
+                                          player.item2.removeAt(scoreIdx);
+                                        });
+                                        Navigator.pop(context, null);
+                                      })
+                                ])),
+                    child: Text(text, textAlign: TextAlign.center));
               } else {
                 return Text("", textAlign: TextAlign.center);
               }
@@ -79,9 +104,9 @@ class _ScoresPageState extends State<ScoresPage> {
         )),
         Keyboard(
           onDone: (t) => setState(() {
-            addScore(t);
-            _focusedPlayerIdx = (_focusedPlayerIdx + 1) % _scores.length;
-          }),
+                addScore(t);
+                _focusedPlayerIdx = (_focusedPlayerIdx + 1) % _scores.length;
+              }),
         ),
         Text("\n"),
       ])),
