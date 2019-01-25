@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Keyboard extends StatefulWidget {
-  Keyboard({Key key, @required this.onChange, @required this.onDone}) : super(key: key);
+  Keyboard({Key key, @required this.onDone})
+      : super(key: key);
 
-  final Function onChange;
   final Function onDone;
 
   @override
@@ -15,9 +15,19 @@ class _Keyboard extends State<Keyboard> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-        children: [
-      Text(text),
+    return Column(children: [
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Text(text),
+        text == "" ? Spacer() : IconButton(
+          icon: Icon(Icons.backspace),
+          tooltip: 'Backspace',
+          onPressed: () {
+            setState(() {
+              text = text.substring(0, text.length - 1);
+            });
+          },
+        ),
+      ]),
       Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: ["1", "2", "3"]
@@ -28,7 +38,6 @@ class _Keyboard extends State<Keyboard> {
                   onPressed: () {
                     setState(() {
                       text += v;
-                      widget.onChange(text);
                     });
                   }))
               .toList()),
@@ -42,7 +51,6 @@ class _Keyboard extends State<Keyboard> {
                   onPressed: () {
                     setState(() {
                       text += v;
-                      widget.onChange(text);
                     });
                   }))
               .toList()),
@@ -50,26 +58,24 @@ class _Keyboard extends State<Keyboard> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: ["7", "8", "9"]
               .map((v) => RaisedButton(
-              child: Text(v, style: TextStyle(color: Colors.white)),
-              color: Colors.green,
-              padding: const EdgeInsets.all(8.0),
-              onPressed: () {
-                setState(() {
-                  text += v;
-                  widget.onChange(text);
-                });
-              }))
+                  child: Text(v, style: TextStyle(color: Colors.white)),
+                  color: Colors.green,
+                  padding: const EdgeInsets.all(8.0),
+                  onPressed: () {
+                    setState(() {
+                      text += v;
+                    });
+                  }))
               .toList()),
-    Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
+      Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
         IconButton(
           icon: Icon(Icons.add_circle),
           tooltip: 'Add Score',
-          onPressed: () { setState(() {
-            text += "+";
-            widget.onChange(text);
-          }); },
+          onPressed: () {
+            setState(() {
+              text += "+";
+            });
+          },
         ),
         RaisedButton(
           child: Text("0", style: TextStyle(color: Colors.white)),
@@ -78,21 +84,20 @@ class _Keyboard extends State<Keyboard> {
           onPressed: () {
             setState(() {
               text += "0";
-              widget.onChange(text);
             });
           },
         ),
         IconButton(
           icon: Icon(Icons.done),
           tooltip: 'Add Score',
-          onPressed: () { setState(() {
-            widget.onDone(text);
-            text = "";
-            widget.onChange(text);
-          }); },
+          onPressed: () {
+            setState(() {
+              widget.onDone(text);
+              text = "";
+            });
+          },
         ),
-      ]
-    ),
+      ]),
     ]);
   }
 }
