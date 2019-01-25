@@ -1,4 +1,4 @@
-package com.example.scorekeeper;
+package au.id.goddard.scorekeeper;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
