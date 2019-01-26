@@ -12,50 +12,46 @@ class PlayersPage extends StatefulWidget {
 
 class _PlayersPageState extends State<PlayersPage> {
   List<String> _players = ["Dave", "Cath", "Miles"];
-  final _ctrl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final _ctrl = TextEditingController();
+
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
+          actions: [
+            FlatButton(
+                child: const Text("Start", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 30)),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ScoresPage(
+                            title: 'Score Keeper', players: _players)),
+                  );
+                })
+          ],
         ),
-        floatingActionButton: FloatingActionButton(
-            child: const Icon(Icons.navigate_next),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        ScoresPage(title: 'Score Keeper', players: _players)),
-              );
-            }),
         body: Column(children: [
           Row(children: [
             Expanded(
-                child: TextFormField(
+                child: TextField(
               autofocus: true,
               controller: _ctrl,
+              maxLines: 1,
               decoration: const InputDecoration(
                 icon: Icon(Icons.person),
                 hintText: 'Player to add?',
                 labelText: 'Name *',
               ),
-              onSaved: (String value) {
-                _players.add(_ctrl.text);
-                _ctrl.clear();
-              },
-            )),
-            IconButton(
-              icon: Icon(Icons.done),
-              tooltip: 'Add Score',
-              onPressed: () {
+              onSubmitted: (String value) {
                 setState(() {
-                  _players.add(_ctrl.text);
-                  _ctrl.clear();
+                _players.add(value);
+                _ctrl.clear();
                 });
               },
-            ),
+            )),
           ]),
           Expanded(
               child: ReorderableListView(
