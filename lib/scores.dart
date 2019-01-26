@@ -50,7 +50,7 @@ class _ScoresPageState extends State<ScoresPage> {
           child: Center(
               child: Text("$name\n${totals[index]}",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontWeight: FontWeight.bold))),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))),
         )));
 
     _scores.asMap().forEach((roundNum, round) {
@@ -78,7 +78,7 @@ class _ScoresPageState extends State<ScoresPage> {
           Expanded(
               child: GridView.count(
             crossAxisCount: widget.players.length + 1,
-            childAspectRatio: screenWidth / widget.players.length / 50,
+            childAspectRatio: screenWidth / widget.players.length / 80,
             children: gridRows,
           )),
           Keyboard(

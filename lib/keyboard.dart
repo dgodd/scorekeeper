@@ -32,7 +32,7 @@ class _Keyboard extends State<Keyboard> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: ["1", "2", "3"]
               .map((v) => RaisedButton(
-                  child: Text(v, style: TextStyle(color: Colors.white)),
+                  child: Text(v, style: TextStyle(color: Colors.white, fontSize: 20)),
                   color: Colors.green,
                   padding: const EdgeInsets.all(8.0),
                   onPressed: () {
@@ -45,7 +45,7 @@ class _Keyboard extends State<Keyboard> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: ["4", "5", "6"]
               .map((v) => RaisedButton(
-                  child: Text(v, style: TextStyle(color: Colors.white)),
+                  child: Text(v, style: TextStyle(color: Colors.white, fontSize: 20)),
                   color: Colors.green,
                   padding: const EdgeInsets.all(8.0),
                   onPressed: () {
@@ -58,7 +58,7 @@ class _Keyboard extends State<Keyboard> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: ["7", "8", "9"]
               .map((v) => RaisedButton(
-                  child: Text(v, style: TextStyle(color: Colors.white)),
+                  child: Text(v, style: TextStyle(color: Colors.white, fontSize: 20)),
                   color: Colors.green,
                   padding: const EdgeInsets.all(8.0),
                   onPressed: () {
@@ -78,7 +78,7 @@ class _Keyboard extends State<Keyboard> {
           },
         ),
         RaisedButton(
-          child: Text("0", style: TextStyle(color: Colors.white)),
+          child: Text("0", style: TextStyle(color: Colors.white, fontSize: 20)),
           color: Colors.green,
           padding: const EdgeInsets.all(8.0),
           onPressed: () {
